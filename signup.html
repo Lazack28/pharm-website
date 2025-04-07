@@ -5,18 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>Sign Up</title>
+    <title>Sign Up - Your Platform Name</title>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form id="signup-form">
-            <input type="email" id="email" placeholder="Email" required />
-            <input type="password" id="password" placeholder="Password" required />
-            <button type="submit">Sign Up</button>
-        </form>
-        <p>Already have an account? <a href="login.html">Login</a></p>
-    </div>
+    <main class="auth-container">
+        <section class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join our community to get started</p>
+            </div>
+
+            <form id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <div class="form-error" id="email-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="password-icon" viewBox="0 0 24 24">
+                                <!-- Eye icon SVG -->
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="form-error" id="password-error"></div>
+                </div>
+
+                <button type="submit" class="auth-button">Sign Up</button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="auth-text">Already have an account? 
+                    <a href="login.html" class="auth-link">Log in here</a>
+                </p>
+                
+                <div class="auth-divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-text">Or continue with</span>
+                    <span class="divider-line"></span>
+                </div>
+
+                <div class="social-auth">
+                    <button type="button" class="social-button google">
+                        <svg class="social-icon"><!-- Google icon --></svg>
+                        Google
+                    </button>
+                    <button type="button" class="social-button github">
+                        <svg class="social-icon"><!-- GitHub icon --></svg>
+                        GitHub
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
     <script src="/js/auth.js"></script>
 </body>
 </html>
