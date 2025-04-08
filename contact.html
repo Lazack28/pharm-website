@@ -85,37 +85,41 @@
 
     <script src="js/script.js"></script>
     <script>
-        // EmailJS form handler
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
+     // EmailJS form handler
+     document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    const form = this;
+            const form = this;
 
-    // Send message to admin
-    emailjs.sendForm('service_hrbf3gf', 'template_60sh00g', form)
-        .then(function(response) {
-            document.getElementById('response-msg').innerText = "Message sent successfully!";
-            form.reset();
+            // Send message to admin
+            emailjs.sendForm('service_hrbf3gf', 'template_60sh00g', form)
+                .then(function(response) {
+                    document.getElementById('response-msg').innerText = "Message sent successfully!";
+                    form.reset();
 
-            // Auto-reply to user
-            const userName = document.getElementById('name').value;
-            const userEmail = document.getElementById('email').value;
+                    // Auto-reply to user
+                    const userName = document.getElementById('name').value;
+                    const userEmail = document.getElementById('email').value;
 
-            emailjs.send('service_hrbf3gf', 'template_2b3j2xd', {
-                from_name: userName,
-                reply_to: userEmail
-            }).then(function() {
-                console.log('Auto-reply sent successfully.');
-            }).catch(function(error) {
-                console.error('Auto-reply failed:', error);
-            });
+                    // Ensure the user email is correctly passed
+                    if (userEmail) {
+                        emailjs.send('service_hrbf3gf', 'template_2b3j2xd', {
+                            from_name: userName,
+                            reply_to: userEmail
+                        }).then(function() {
+                            console.log('Auto-reply sent successfully.');
+                        }).catch(function(error) {
+                            console.error('Auto-reply failed:', error);
+                        });
+                    } else {
+                        console.error('User email is missing.');
+                    }
 
-        }, function(error) {
-            document.getElementById('response-msg').innerText = "Failed to send message. Please try again.";
-            console.error('EmailJS Error:', error);
+                }, function(error) {
+                    document.getElementById('response-msg').innerText = "Failed to send message. Please try again.";
+                    console.error('EmailJS Error:', error);
+                });
         });
-});
-
     </script>
 </body>
 </html>
