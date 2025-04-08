@@ -86,45 +86,44 @@
     <script src="js/script.js"></script>
     <script>
         // EmailJS form handler
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const form = this;
-            const userEmail = document.getElementById('email').value; // Get email value
+            const form = e.target;
+            const responseMsg = document.getElementById('response-msg');
+            const userEmail = document.getElementById('email').value;
+            const userName = document.getElementById('name').value;
 
             if (!userEmail) {
-                document.getElementById('response-msg').innerText = "Please provide a valid email address.";
-                console.error('User email is missing');
+                responseMsg.innerText = "Please provide a valid email address.";
                 return;
             }
 
-            // Send message to admin
-            emailjs.sendForm('service_hrbf3gf', 'template_60sh00g', form)
-                .then(function(response) {
-                    document.getElementById('response-msg').innerText = "Message sent successfully!";
-                    form.reset();
+            try {
+                // 1. Send message to admin
+                await emailjs.sendForm(
+                    'service_hrbf3gf', // Replace with your EmailJS Service ID
+                    'template_60sh00g', // Replace with your Admin Notification Template ID
+                    form
+                );
 
-                    // Auto-reply to user (make sure the reply_to is correctly filled)
-                    const userName = document.getElementById('name').value;
-
-                    if (!userEmail) {
-                        console.error('User email is missing for auto-reply');
-                        return;
+                // 2. Send auto-reply to user
+                await emailjs.send(
+                    'service_hrbf3gf', // Same service as above
+                    'template_2b3j2xd', // Replace with your Auto-Reply Template ID
+                    {
+                        to_email: userEmail, // Must match {{to_email}} in your EmailJS template
+                        from_name: "Pharma Website Team", // Static sender name
+                        user_name: userName // Optional: Include user's name in the auto-reply
                     }
+                );
 
-                    emailjs.send('service_hrbf3gf', 'template_2b3j2xd', {
-                        from_name: userName,
-                        reply_to: userEmail // Make sure this is passed correctly
-                    }).then(function() {
-                        console.log('Auto-reply sent successfully.');
-                    }).catch(function(error) {
-                        console.error('Auto-reply failed:', error);
-                    });
+                responseMsg.innerText = "Message sent! Check your email for confirmation.";
+                form.reset();
 
-                }, function(error) {
-                    document.getElementById('response-msg').innerText = "Failed to send message. Please try again.";
-                    console.error('EmailJS Error:', error);
-                });
+            } catch (error) {
+                console.error("EmailJS Error:", error);
+                responseMsg.innerText = "Message failed to send. Please try again.";
+            }
         });
     </script>
 </body>
