@@ -104,13 +104,17 @@
                     document.getElementById('response-msg').innerText = "Message sent successfully!";
                     form.reset();
 
-                    // Auto-reply to user
+                    // Auto-reply to user (make sure the reply_to is correctly filled)
                     const userName = document.getElementById('name').value;
 
-                    // Ensure the user email is correctly passed
+                    if (!userEmail) {
+                        console.error('User email is missing for auto-reply');
+                        return;
+                    }
+
                     emailjs.send('service_hrbf3gf', 'template_2b3j2xd', {
                         from_name: userName,
-                        reply_to: userEmail
+                        reply_to: userEmail // Make sure this is passed correctly
                     }).then(function() {
                         console.log('Auto-reply sent successfully.');
                     }).catch(function(error) {
