@@ -5,7 +5,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { ResourceCard } from "@/components/resource-card"
 import { CategoryCard } from "@/components/category-card"
-import { NewsletterSignup } from "@/components/newsletter-signup"
 import { VercelDeployButton } from "@/components/vercel-deploy-button"
 
 export default function Home() {
@@ -171,9 +170,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-12">
-        <NewsletterSignup />
+      {/* Contact Us Section (replacing Newsletter) */}
+      <section className="py-12 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 rounded-lg">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold">Need Help?</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto mt-2">
+            Have questions or need specific resources? We're here to help you succeed in your pharmacy education.
+          </p>
+        </div>
+        <div className="flex justify-center">
+          <Button size="lg" asChild>
+            <Link href="/contact">Contact Us</Link>
+          </Button>
+        </div>
       </section>
 
       {/* Vercel Deployment */}
