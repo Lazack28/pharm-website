@@ -11,7 +11,9 @@
     "dependencies": {
         "@types/react": "^18.2.41",
 "@types/node": "^20.11.25",
-
+"react-pdf": "^7.7.4",
+"pdfjs-dist": "^3.11.174",
+"@types/react-pdf": "^5.0.5",
       "autoprefixer": "^10.4.17",
       "next": "14.1.0",
       "react": "18.2.0",
