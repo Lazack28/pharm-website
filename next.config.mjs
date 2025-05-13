@@ -7,11 +7,17 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Remove static export for Vercel deployment
-  // output: 'export',
+  // Make sure we're not using static export for Vercel
+  // output: 'export', // Remove this line for Vercel deployment
   
+  // Configure images
   images: {
-    domains: ['placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   
   // Configure redirects

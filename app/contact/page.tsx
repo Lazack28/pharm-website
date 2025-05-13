@@ -6,22 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Mail, MapPin, MessageSquare, CheckCircle, AlertCircle } from "lucide-react"
 import { useEffect } from "react"
 import Script from "next/script"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-
-// Define EmailJS types
-declare global {
-  interface Window {
-    emailjs: {
-      init: (publicKey: string) => void
-      sendForm: (serviceId: string, templateId: string, form: HTMLFormElement) => Promise<any>
-      send: (serviceId: string, templateId: string, templateParams: any) => Promise<any>
-    }
-  }
-}
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -29,22 +17,40 @@ export default function ContactPage() {
     type: "success" | "error" | null
     message: string
   }>({ type: null, message: "" })
+  const [emailJSLoaded, setEmailJSLoaded] = useState(false)
 
   useEffect(() => {
-    // Initialize EmailJS when component mounts
+    // Check if EmailJS is already loaded
     if (typeof window !== "undefined" && window.emailjs) {
       window.emailjs.init("GCqWR_iPIjGj8IZfy")
+      setEmailJSLoaded(true)
     }
   }, [])
 
+  const handleScriptLoad = () => {
+    if (typeof window !== "undefined" && window.emailjs) {
+      window.emailjs.init("GCqWR_iPIjGj8IZfy")
+      setEmailJSLoaded(true)
+    }
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!emailJSLoaded) {
+      setFormStatus({
+        type: "error",
+        message: "Email service is still loading. Please try again in a moment.",
+      })
+      return
+    }
+
     setIsSubmitting(true)
     setFormStatus({ type: null, message: "" })
 
     const form = e.target as HTMLFormElement
-    const userEmail = (form.elements.namedItem("reply_to") as HTMLInputElement).value
-    const userName = (form.elements.namedItem("from_name") as HTMLInputElement).value
+    const userEmail = (form.elements.namedItem("reply_to") as HTMLInputElement)?.value
+    const userName = (form.elements.namedItem("from_name") as HTMLInputElement)?.value
 
     if (!userEmail) {
       setFormStatus({
@@ -92,7 +98,11 @@ export default function ContactPage() {
 
   return (
     <>
-      <Script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" strategy="lazyOnload" />
+      <Script
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+        strategy="afterInteractive"
+        onLoad={handleScriptLoad}
+      />
 
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
@@ -188,18 +198,7 @@ export default function ContactPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Select name="subject">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a subject" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="general">General Inquiry</SelectItem>
-                      <SelectItem value="resources">Resource Request</SelectItem>
-                      <SelectItem value="feedback">Feedback</SelectItem>
-                      <SelectItem value="technical">Technical Support</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input id="subject" name="subject" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
